@@ -1,0 +1,11 @@
+<h1>My Discounts<h1>
+
+<% @discounts.each do |discount| %>
+  <section id="discount-<%= discount.id %>">
+    <ul>
+      <li>Name: <%= discount.name %></li>
+      <li>Item Threshold: <%= discount.item_threshold %></li>
+      <li>Discount Amount: <%= discount.discount %></li>
+    </ul>
+  </section>
+<% end %>
