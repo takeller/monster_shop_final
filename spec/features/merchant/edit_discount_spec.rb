@@ -20,5 +20,22 @@ describe "Edit Merchant Discount" do
 
       expect(current_path).to eq("/merchant/bulk_discounts/#{@discount1.id}/edit")
     end
+
+    it "I can update a discount's information" do
+      visit "/merchant/bulk_discounts/#{@discount1.id}/edit"
+
+      fill_in "Name", with: "5 for 7"
+      fill_in :bulk_discount_item_threshold, with: 7
+      click_button "Update Discount"
+
+      expect(current_path).to eq("/merchant/bulk_discounts")
+
+      within("#discount-#{@discount1.id}") do
+        expect(page).to have_content("Name: 5 for 7")
+        expect(page).to have_content("Item Threshold: 7")
+        expect(page).to have_content("Discount Amount: 5")
+      end
+
+    end
   end
 end

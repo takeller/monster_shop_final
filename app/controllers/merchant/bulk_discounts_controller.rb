@@ -25,6 +25,17 @@ class Merchant::BulkDiscountsController < Merchant::BaseController
     @bulk_discount = BulkDiscount.find(params[:id])
   end
 
+  def update
+    bulk_discount = BulkDiscount.find(params[:id])
+    if bulk_discount.update(discount_params)
+      flash[:notice] = "You have updated your discount"
+      redirect_to merchant_bulk_discounts_path
+    else
+      flash[:notice] = "You were unable to update the discount"
+      redirect_back fallback_location: merchant_bulk_discounts_path
+    end
+  end
+
 private
 
   def discount_params
