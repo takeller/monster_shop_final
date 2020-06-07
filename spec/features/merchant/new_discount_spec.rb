@@ -18,5 +18,28 @@ describe "New Merchant Discount" do
 
       expect(current_path).to eq("/merchant/bulk_discounts/new")
     end
+
+    it "I can create discount for a merchant" do
+      name = "10 for 10"
+      item_threshold = 10
+      discount = 10
+
+      visit "merchant/bulk_discounts/new"
+
+      fill_in "Name", with: name
+      fill_in :bulk_discount_item_threshold, with: item_threshold
+      fill_in "Discount", with: discount
+      click_button "Create Discount"
+
+      last_discount = BulkDiscount.last
+
+      expect(current_path).to eq("/merchant/bulk_discounts")
+      within("#discount-#{last_discount.id}") do
+        expect(page).to have_content("Name: #{last_discount.name}")
+        expect(page).to have_content("Item Threshold: #{last_discount.item_threshold}")
+        expect(page).to have_content("Discount Amount: #{last_discount.discount}")
+      end
+
+    end
   end
 end
