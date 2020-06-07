@@ -7,6 +7,7 @@
       <li>Item Threshold: <%= bulk_discount.item_threshold %></li>
       <li>Discount Amount: <%= bulk_discount.discount %></li>
       <li> <%= link_to "Edit Discount", edit_merchant_bulk_discount_path(bulk_discount.id) %></li>
+      <li> <%= link_to "Destroy Discount", merchant_bulk_discount_path(bulk_discount), method: :delete %> </li>
     </ul>
   </section>
 <% end %>
