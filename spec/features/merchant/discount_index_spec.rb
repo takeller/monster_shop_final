@@ -16,11 +16,11 @@ describe "Merchant Discount Index" do
 
       click_link "My Discounts"
 
-      expect(current_path).to eq("/merchant/discounts")
+      expect(current_path).to eq("/merchant/bulk_discounts")
     end
 
     it "I can see all of my discounts" do
-      visit "/merchant/discounts"
+      visit "/merchant/bulk_discounts"
 
       within("#discount-#{@discount1.id}") do
         expect(page).to have_content("Name: #{@discount1.name}")

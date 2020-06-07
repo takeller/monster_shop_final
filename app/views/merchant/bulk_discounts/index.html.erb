@@ -1,0 +1,11 @@
+<h1>My Discounts<h1>
+<%= link_to "New Discount", new_merchant_bulk_discount_path %>
+<% @bulk_discounts.each do |bulk_discount| %>
+  <section id="discount-<%= bulk_discount.id %>">
+    <ul>
+      <li>Name: <%= bulk_discount.name %></li>
+      <li>Item Threshold: <%= bulk_discount.item_threshold %></li>
+      <li>Discount Amount: <%= bulk_discount.discount %></li>
+    </ul>
+  </section>
+<% end %>
