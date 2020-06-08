@@ -37,10 +37,24 @@ class Cart
   end
 
   def subtotal_of(item_id)
+    # if find_discount
+    # else
     @contents[item_id.to_s] * Item.find(item_id).price
+    # end
   end
 
   def limit_reached?(item_id)
     count_of(item_id) == Item.find(item_id).inventory
+  end
+
+  def find_merchants
+    item_ids = @contents.keys.map { |item_id| item_id.to_i }
+    merchants = Item.select(:merchant_id).where(id: item_ids).distinct
+    merchants.map { |merchant| merchant.merchant_id }
+  end
+
+  def find_discount
+    # binding.pry
+
   end
 end
