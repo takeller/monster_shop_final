@@ -37,10 +37,15 @@ class Cart
   end
 
   def subtotal_of(item_id)
-    # if find_discount
-    # else
-    @contents[item_id.to_s] * Item.find(item_id).price
-    # end
+    applicable_discounts = find_applicable_discounts
+    subtotal = @contents[item_id.to_s] * Item.find(item_id).price
+    if applicable_discounts
+
+      discount_to_apply = applicable_discounts[item_id].max_by { |discount| discount.discount} if applicable_discounts[item_id]
+      subtotal = apply_discount(subtotal, discount_to_apply)
+    else
+      subtotal
+    end
   end
 
   def limit_reached?(item_id)
@@ -69,5 +74,9 @@ class Cart
     end
     return nil if applicable_discounts.empty?
     applicable_discounts
+  end
+
+  def apply_discount(subtotal, discount)
+    subtotal * ((100 - discount.discount)/100.0)
   end
 end

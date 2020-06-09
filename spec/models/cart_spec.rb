@@ -53,6 +53,12 @@ RSpec.describe Cart do
     it '.subtotal_of()' do
       expect(@cart.subtotal_of(@ogre.id)).to eq(20)
       expect(@cart.subtotal_of(@giant.id)).to eq(100)
+
+      5.times do
+        @cart.add_item(@hippo.id.to_s)
+      end
+
+      expect(@cart.subtotal_of(@hippo.id)).to eq(237.5)
     end
 
     it '.limit_reached?()' do
@@ -90,6 +96,11 @@ RSpec.describe Cart do
       end
 
       expect(@cart.find_applicable_discounts).to eq({@hippo.id =>[@discount1]})
+    end
+
+    it '.apply_discount' do
+      expect(@cart.apply_discount(250, @discount1)).to eq(237.5)
+      expect(@cart.apply_discount(1000, @discount1)).to eq(950)
     end
   end
 end
