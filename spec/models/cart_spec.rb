@@ -109,12 +109,12 @@ RSpec.describe Cart do
         @cart.add_item(@hippo.id.to_s)
       end
 
-      expect(@cart.find_applicable_discounts).to eq({@hippo.id =>[@discount1]})
+      expect(@cart.find_applicable_discounts).to eq({@hippo.id =>5})
     end
 
     it '.apply_discount' do
-      expect(@cart.apply_discount(250, @discount1)).to eq(237.5)
-      expect(@cart.apply_discount(1000, @discount1)).to eq(950)
+      expect(@cart.apply_discount(250, 5)).to eq(237.5)
+      expect(@cart.apply_discount(1000, 5)).to eq(950)
     end
   end
 end

@@ -42,7 +42,7 @@ class Cart
 
     if applicable_discounts && applicable_discounts[item_id.to_i]
 
-      discount_to_apply = applicable_discounts[item_id.to_i].max_by { |discount| discount.discount}
+      discount_to_apply = applicable_discounts[item_id.to_i]
       subtotal = apply_discount(subtotal, discount_to_apply)
     else
       subtotal
@@ -66,18 +66,22 @@ class Cart
   end
 
   def find_applicable_discounts
+    return nil if find_merchant_discounts.nil?
     discounts = find_merchant_discounts
     applicable_discounts = {}
     @contents.each do |item_id, quantity|
       item = Item.find(item_id)
-      item_discounts = discounts.where("merchant_id = #{item.merchant_id} AND item_threshold <= #{quantity}")
-      applicable_discounts[item_id.to_i] = item_discounts if item_discounts.count > 0
+
+      max_discount = discounts.where("merchant_id = #{item.merchant_id} AND item_threshold <= #{quantity}").maximum(:discount)
+
+      applicable_discounts[item_id.to_i] = max_discount unless max_discount.nil?
     end
     return nil if applicable_discounts.empty?
     applicable_discounts
   end
 
   def apply_discount(subtotal, discount)
-    subtotal * ((100 - discount.discount)/100.0)
+    subtotal * ((100 - discount)/100.0)
   end
+
 end
