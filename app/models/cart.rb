@@ -27,7 +27,7 @@ class Cart
   def grand_total
     grand_total = 0.0
     @contents.each do |item_id, quantity|
-      grand_total += Item.find(item_id).price * quantity
+      grand_total += subtotal_of(item_id)
     end
     grand_total
   end
@@ -39,9 +39,10 @@ class Cart
   def subtotal_of(item_id)
     applicable_discounts = find_applicable_discounts
     subtotal = @contents[item_id.to_s] * Item.find(item_id).price
-    if applicable_discounts
 
-      discount_to_apply = applicable_discounts[item_id].max_by { |discount| discount.discount} if applicable_discounts[item_id]
+    if applicable_discounts && applicable_discounts[item_id.to_i]
+
+      discount_to_apply = applicable_discounts[item_id.to_i].max_by { |discount| discount.discount}
       subtotal = apply_discount(subtotal, discount_to_apply)
     else
       subtotal

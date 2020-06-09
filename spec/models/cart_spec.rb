@@ -43,6 +43,20 @@ RSpec.describe Cart do
 
     it '.grand_total' do
       expect(@cart.grand_total).to eq(120)
+
+      4.times do
+        @cart.add_item(@hippo.id.to_s)
+      end
+
+      expect(@cart.grand_total).to eq(320)
+
+      @cart.add_item(@hippo.id.to_s)
+
+      expect(@cart.grand_total).to eq(357.5)
+
+      BulkDiscount.create!(name: "25 for 5", item_threshold: 5, discount: 25, merchant_id: @brian.id)
+
+      expect(@cart.grand_total).to eq(307.5)
     end
 
     it '.count_of()' do
