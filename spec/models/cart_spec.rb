@@ -13,6 +13,7 @@ RSpec.describe Cart do
         @giant.id.to_s => 2
         })
       @discount1 = BulkDiscount.create!(name: "5 for 5", item_threshold: 5, discount: 5, merchant_id: @brian.id)
+      @discount2 = BulkDiscount.create!(name: "5 for 10", item_threshold: 10, discount: 5, merchant_id: @megan.id)
     end
 
     it '.contents' do
@@ -65,14 +66,12 @@ RSpec.describe Cart do
       expect(@cart.count_of(@giant.id)).to eq(1)
     end
 
-    it '.find_discount' do
-      expect(@cart.find_discount).to eq(nil)
-      5.times do
-        @cart.add_item(@hippo.id.to_s)
-      end
+    it '.find_merchant_discounts' do
+      expect(@cart.find_merchant_discounts).to eq([@discount2])
 
-      expect(@cart.find_discount).to eq([@discount1])
+      @cart.add_item(@hippo.id.to_s)
 
+      expect(@cart.find_merchant_discounts).to eq([@discount1, @discount2])
     end
 
     it '.find_merchants' do
@@ -81,6 +80,16 @@ RSpec.describe Cart do
       @cart.add_item(@hippo.id.to_s)
 
       expect(@cart.find_merchants).to eq([@megan.id, @brian.id])
+    end
+
+    it '.find_applicable_discounts' do
+      expect(@cart.find_applicable_discounts).to eq(nil)
+
+      5.times do
+        @cart.add_item(@hippo.id.to_s)
+      end
+
+      expect(@cart.find_applicable_discounts).to eq({@hippo.id =>[@discount1]})
     end
   end
 end

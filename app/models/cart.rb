@@ -49,12 +49,25 @@ class Cart
 
   def find_merchants
     item_ids = @contents.keys.map { |item_id| item_id.to_i }
-    merchants = Item.select(:merchant_id).where(id: item_ids).distinct
-    merchants.map { |merchant| merchant.merchant_id }
+    Item.select(:merchant_id).where(id: item_ids).distinct.pluck(:merchant_id)
   end
 
-  def find_discount
-    # binding.pry
+  def find_merchant_discounts
+    merchant_ids = find_merchants
+    discounts = BulkDiscount.where(merchant_id: merchant_ids)
+    return nil if discounts.count == 0
+    discounts
+  end
 
+  def find_applicable_discounts
+    discounts = find_merchant_discounts
+    applicable_discounts = {}
+    @contents.each do |item_id, quantity|
+      item = Item.find(item_id)
+      item_discounts = discounts.where("merchant_id = #{item.merchant_id} AND item_threshold <= #{quantity}")
+      applicable_discounts[item_id.to_i] = item_discounts if item_discounts.count > 0
+    end
+    return nil if applicable_discounts.empty?
+    applicable_discounts
   end
 end
